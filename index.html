@@ -139,7 +139,7 @@
    </ol>
    <!--@alt--><p class="alt">Prefer email? <a href="mailto:quote@wicketedbags.com?subject=Quote%20request">quote@wicketedbags.com</a></p><!--/@alt-->
   </div>
-  <form class="quote" id="quoteForm" action="mailto:quote@wicketedbags.com" method="post" enctype="text/plain">
+  <form class="quote" id="quoteForm" action="https://api.web3forms.com/submit" method="post" data-to="quote@wicketedbags.com"><!--@form-hidden--><input type="hidden" name="access_key" value="6cf7631e-6976-4da2-b600-f38e5e8c095f"><input type="hidden" name="subject" value="Quote request from WicketedBags.com"><input type="hidden" name="from_name" value="WicketedBags.com"><input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true"><!--/@form-hidden-->
    <div class="row2"><label>Name<input name="name" autocomplete="name" required></label><label>Company<input name="company" autocomplete="organization"></label></div>
    <div class="row2"><label>Email<input name="email" type="email" autocomplete="email" required></label><label>Phone<input name="phone" type="tel" autocomplete="tel"></label></div>
    <div class="row2"><label>Bag size<input name="size" placeholder="e.g. 10 x 18 in"></label><label>Quantity<input name="qty" placeholder="How many?"></label></div>
@@ -147,7 +147,7 @@
    <label>Film<select name="film"><option>Clear</option><option>White</option><option>Metallized</option><option>Not sure</option></select></label>
    <label>Details<textarea name="details" rows="4" placeholder="Print colors, vents, gusset, header, machine…"></textarea></label>
    <button class="btn" type="submit">Send quote request</button>
-   <p class="note">Opens your email app, addressed to quote@wicketedbags.com.</p>
+   <p class="note">Sent straight to quote@wicketedbags.com.</p>
   </form>
  </div>
 </section>
