@@ -17,16 +17,49 @@ document.addEventListener("DOMContentLoaded",function(){
   var f=document.getElementById("quoteForm"); if(!f) return;
   var to=f.getAttribute("data-to")||"quote@wicketedbags.com";
   function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  // "Other" in a select reveals its own required text box ("Type the film" etc.)
+  function syncOther(sel){
+    var box=f.querySelector('.other[data-for="'+sel.name+'"]'); if(!box) return;
+    var inp=box.querySelector("input"), on=sel.value==="Other";
+    box.hidden=!on; inp.disabled=!on; inp.required=on;
+    if(!on){ inp.value=""; clearBad(inp); }
+  }
+  // Every field but Details is required: mark empty ones with a red outline + "Required"
+  function clearBad(el){
+    el.classList.remove("bad"); el.removeAttribute("aria-invalid");
+    var lab=el.closest("label"), m=lab&&lab.querySelector(".req-msg"); if(m) m.remove();
+  }
+  function markBad(el,msg){
+    el.classList.add("bad"); el.setAttribute("aria-invalid","true");
+    var lab=el.closest("label"); if(!lab) return;
+    var m=lab.querySelector(".req-msg"); if(!m){ m=document.createElement("span"); m.className="req-msg"; lab.appendChild(m); }
+    m.textContent=msg;
+  }
+  function check(el){
+    if(el.disabled||!el.required) return true;
+    var v=(el.value||"").trim();
+    if(!v){ markBad(el,"Required"); return false; }
+    if(el.type==="email" && el.validity && el.validity.typeMismatch){ markBad(el,"Enter a valid email"); return false; }
+    clearBad(el); return true;
+  }
+  f.noValidate=true; // our own messages replace the browser bubble (native `required` still guards no-JS posts)
+  f.querySelectorAll("select").forEach(function(s){ syncOther(s); s.addEventListener("change",function(){ syncOther(s); check(s); }); });
+  f.querySelectorAll("input,select,textarea").forEach(function(el){
+    el.addEventListener("input",function(){ if(el.classList.contains("bad")) check(el); });
+    el.addEventListener("blur",function(){ if(el.classList.contains("bad")) check(el); });
+  });
   f.addEventListener("submit",function(e){
     e.preventDefault();
-    if(!f.reportValidity()) return;
+    var bad=[]; f.querySelectorAll("input[required],select[required]").forEach(function(el){ if(!check(el)) bad.push(el); });
+    if(bad.length){ bad[0].scrollIntoView({block:"center"}); try{ bad[0].focus({preventScroll:true}); }catch(_){ bad[0].focus(); } return; }
     var d=new FormData(f);
     if(d.get("botcheck")) return;
-    var L=[["Name","name"],["Company","company"],["Email","email"],["Phone","phone"],["Product","product"],["Bag size","size"],["Quantity","qty"],["Film","film"],["Details","details"]];
-    var prod=d.get("product")||"", co=d.get("company")||"", em=d.get("email")||"";
+    function val(n){ var v=(d.get(n)||"").trim(); if(v==="Other"){ var o=(d.get(n+"_other")||"").trim(); return o?"Other: "+o:"Other"; } return v; }
+    var L=[["Name","name"],["Company","company"],["Email","email"],["Phone","phone"],["Bag size","size"],["Quantity","qty"],["Product","product"],["Film","film"],["Structure","structure"],["Gauge (mil)","gauge"],["Details","details"]];
+    var prod=val("product").replace(/^Other: /,""), co=(d.get("company")||"").trim(), em=(d.get("email")||"").trim();
     var data={access_key:d.get("access_key"), from_name:"WicketedBags.com", replyto:em, email:em,
-      subject:"Quote request – "+(prod && prod!=="Not sure" ? prod : "Wicketed bags")+(co?" – "+co:"")};
-    L.forEach(function(p){ if(p[1]!=="email") data[p[0]]=d.get(p[1])||""; });
+      subject:"Quote request – "+(prod && prod!=="Not sure" && prod!=="Other" ? prod : "Wicketed bags")+(co?" – "+co:"")};
+    L.forEach(function(p){ if(p[1]!=="email") data[p[0]]=val(p[1])||(p[1]==="details"?"(none)":""); });
     data["Sent from"]=location.href;
     var btn=f.querySelector('button[type="submit"]'), label=btn.textContent, err=f.querySelector(".form-err");
     if(err) err.remove();
