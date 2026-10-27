@@ -191,3 +191,18 @@ h3{font-weight:650;font-size:1.12rem}
 .guide h3{font-size:1.3rem;margin:34px 0 10px;letter-spacing:-.01em}.guide h2+h3{margin-top:8px}
 .guide p{margin:0 0 14px}.guide ul{margin:0 0 14px;padding-left:1.2em}.guide li{margin:0 0 8px}.guide li b{color:var(--ink)}
 .guide a{font-weight:600}
+
+/*blog*/
+.blog-hero{padding-bottom:8px}
+.blog-hero h1{max-width:22ch}
+.post-img{margin-top:28px}
+.post{padding-top:40px}
+.post .guide h2,.guide.post h2{font-size:1.6rem;margin:40px 0 12px}
+.guide h2{scroll-margin-top:80px}
+.posts{list-style:none;padding:0;margin:0;display:grid;gap:16px}
+.posts a{display:grid;gap:6px;padding:22px;border:1px solid var(--line);border-radius:var(--r);text-decoration:none;color:var(--muted);line-height:1.5;transition:border-color .15s}
+.posts a:hover{border-color:var(--cob)}
+.posts time{font:500 13px/1.3 "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--cob)}
+.posts b{font:700 1.35rem/1.2 "Space Grotesk",sans-serif;color:var(--ink)}
+.posts b::after{content:" →";color:var(--cob)}
+/*/blog*/
