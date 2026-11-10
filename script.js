@@ -42,6 +42,16 @@ document.addEventListener("DOMContentLoaded",function(){
     if(el.type==="email" && el.validity && el.validity.typeMismatch){ markBad(el,"Enter a valid email"); return false; }
     clearBad(el); return true;
   }
+  // Optional artwork file: PDF (or AI/EPS/PNG/JPG), up to 20 MB, checked as soon as it is chosen.
+  var art=f.querySelector('input[name="artwork"]'), MAXB=20*1024*1024, OKX=/\.(pdf|ai|eps|png|jpe?g)$/i;
+  function mb(n){ return n>=1048576?(n/1048576).toFixed(1)+" MB":Math.max(1,Math.round(n/1024))+" KB"; }
+  function checkArt(){
+    if(!art) return true; clearBad(art); var fl=art.files&&art.files[0]; if(!fl) return true;
+    if(!OKX.test(fl.name)){ markBad(art,"Please choose a PDF (or AI, EPS, PNG, JPG) file."); return false; }
+    if(fl.size>MAXB){ markBad(art,"That file is "+mb(fl.size)+". The limit is 20 MB. Please send a smaller PDF, or email it to "+to+"."); return false; }
+    return true;
+  }
+  if(art) art.addEventListener("change",checkArt);
   f.noValidate=true; // our own messages replace the browser bubble (native `required` still guards no-JS posts)
   f.querySelectorAll("select").forEach(function(s){ syncOther(s); s.addEventListener("change",function(){ syncOther(s); check(s); }); });
   f.querySelectorAll("input,select,textarea").forEach(function(el){
@@ -51,6 +61,7 @@ document.addEventListener("DOMContentLoaded",function(){
   f.addEventListener("submit",function(e){
     e.preventDefault();
     var bad=[]; f.querySelectorAll("input[required],select[required]").forEach(function(el){ if(!check(el)) bad.push(el); });
+    if(art && !checkArt()) bad.push(art);
     if(bad.length){ bad[0].scrollIntoView({block:"center"}); try{ bad[0].focus({preventScroll:true}); }catch(_){ bad[0].focus(); } return; }
     var d=new FormData(f);
     if(d.get("botcheck")) return;
@@ -64,16 +75,23 @@ document.addEventListener("DOMContentLoaded",function(){
     var btn=f.querySelector('button[type="submit"]'), label=btn.textContent, err=f.querySelector(".form-err");
     if(err) err.remove();
     btn.disabled=true; btn.textContent="Sending…";
-    fetch(f.getAttribute("action"),{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(data)})
+    var fl=art&&art.files&&art.files[0], up=f.getAttribute("data-upload");
+    var upload=fl&&up ? fetch(up+"?name="+encodeURIComponent(fl.name),{method:"POST",headers:{"Content-Type":fl.type||"application/octet-stream"},body:fl})
+        .then(function(r){return r.json().then(function(j){ if(!r.ok||!j.url){ var e=new Error(j.error||r.status); e.upload=true; throw e; } data["Artwork"]=j.name+" ("+mb(j.size)+"): "+j.url; });},function(){ var e=new Error("upload"); e.upload=true; throw e; })
+      : Promise.resolve();
+    if(fl) btn.textContent="Uploading artwork…";
+    upload.then(function(){ btn.textContent="Sending…"; return fetch(f.getAttribute("action"),{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(data)}); })
       .then(function(r){return r.json().then(function(j){ if(!r.ok||!j.success) throw new Error(j.message||r.status); });})
       .then(function(){
         f.innerHTML='<div class="thanks" role="status" tabindex="-1"><h3>Thanks, we got your request.</h3><p>We\u2019ll reply to <strong>'+esc(em)+'</strong> soon. Need to add something? Email <a href="mailto:'+to+'">'+to+'</a>.</p></div>';
         var t=f.querySelector(".thanks"); t.focus(); t.scrollIntoView({block:"center"});
       })
-      .catch(function(){
+      .catch(function(e){
         btn.disabled=false; btn.textContent=label;
         var p=document.createElement("p"); p.className="note form-err"; p.setAttribute("role","alert");
-        p.innerHTML='Sorry, that didn\u2019t send. Please try again, or email <a href="mailto:'+to+'">'+to+'</a>.';
+        p.innerHTML=(e&&e.upload)
+          ? 'Sorry, your artwork didn\u2019t upload. Please try again, remove the file and send without it, or email it to <a href="mailto:'+to+'">'+to+'</a>.'
+          : 'Sorry, that didn\u2019t send. Please try again, or email <a href="mailto:'+to+'">'+to+'</a>.';
         btn.insertAdjacentElement("afterend",p);
       });
   });

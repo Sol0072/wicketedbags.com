@@ -245,6 +245,7 @@
   ]
 }
 </script>
+<script src="https://wicketedbags-visits.sites.tab.bot/v.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -367,7 +368,7 @@
    </ol>
    <!--@alt--><p class="alt">Prefer email? <a href="mailto:quote@wicketedbags.com?subject=Quote%20request">quote@wicketedbags.com</a></p><!--/@alt-->
   </div>
-  <form class="quote" id="quoteForm" action="https://api.web3forms.com/submit" method="post" data-to="quote@wicketedbags.com"><!--@form-hidden--><input type="hidden" name="access_key" value="6cf7631e-6976-4da2-b600-f38e5e8c095f"><input type="hidden" name="subject" value="Quote request from WicketedBags.com"><input type="hidden" name="from_name" value="WicketedBags.com"><input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true"><!--/@form-hidden-->
+  <form class="quote" id="quoteForm" action="https://api.web3forms.com/submit" method="post" data-to="quote@wicketedbags.com" data-upload="https://wicketedbags-uploads.sites.tab.bot/upload"><!--@form-hidden--><input type="hidden" name="access_key" value="6cf7631e-6976-4da2-b600-f38e5e8c095f"><input type="hidden" name="subject" value="Quote request from WicketedBags.com"><input type="hidden" name="from_name" value="WicketedBags.com"><input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true"><!--/@form-hidden-->
    <!--@form-fields-->
    <div class="row2"><label>Name<input name="name" autocomplete="name" required></label><label>Company<input name="company" autocomplete="organization" required></label></div>
    <div class="row2"><label>Email<input name="email" type="email" autocomplete="email" required></label><label>Phone<input name="phone" type="tel" autocomplete="tel" required></label></div>
@@ -375,6 +376,7 @@
    <div class="row2"><div class="fld"><label>Product<select name="product" required><option value="" disabled selected>Choose…</option><option>Not sure</option><option>Bakery &amp; bread bags</option><option>Pita bags</option><option>Tortilla bags</option><option>Shirt &amp; apparel bags</option><option>Produce bags</option><option>Frozen food &amp; ice bags</option><option>Printed wicketed bags</option><option>Candy &amp; snacks</option><option>Retail &amp; hardware</option><option>Industrial parts</option><option>Other</option></select></label><label class="other" data-for="product" hidden>Type the product<input name="product_other" maxlength="120" disabled></label></div><div class="fld"><label>Film<select name="film" required><option value="" disabled selected>Choose…</option><option>Clear</option><option>Natural</option><option>White</option><option>Metallized</option><option>Other</option></select></label><label class="other" data-for="film" hidden>Type the film<input name="film_other" maxlength="120" disabled></label></div></div>
    <div class="row2"><div class="fld"><label>Structure<select name="structure" required><option value="" disabled selected>Choose…</option><option>Flat</option><option>Side gusset</option><option>Bottom gusset</option><option>Other</option></select></label><label class="other" data-for="structure" hidden>Type the structure<input name="structure_other" maxlength="120" disabled></label></div><div class="fld"><label>Gauge (mil)<select name="gauge" required><option value="" disabled selected>Choose…</option><option>0.5 mil</option><option>0.75 mil</option><option>1 mil</option><option>1.25 mil</option><option>1.5 mil</option><option>2 mil</option><option>3 mil</option><option>Other</option></select></label><label class="other" data-for="gauge" hidden>Type the gauge<input name="gauge_other" maxlength="120" disabled></label></div></div>
    <label>Details (optional)<textarea name="details" rows="4" placeholder="Print colors, vents, gusset, header, machine…"></textarea></label>
+   <label class="file"><span>Upload your artwork (PDF) <span class="opt">— optional</span></span><input type="file" name="artwork" accept=".pdf,.ai,.eps,.png,.jpg,.jpeg,application/pdf,application/postscript,image/png,image/jpeg"><span class="hint">PDF preferred. AI, EPS, PNG or JPG also work. Up to 20 MB.</span></label>
    <!--/@form-fields-->
    <button class="btn" type="submit">Send quote request</button>
    <p class="note">Sent straight to quote@wicketedbags.com.</p>
