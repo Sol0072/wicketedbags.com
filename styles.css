@@ -83,7 +83,7 @@ h3{font-weight:650;font-size:1.12rem}
 .quote label.file .opt{font-weight:400;color:var(--muted)}
 .quote label.file input[type=file]{padding:9px 10px;font-size:15px;cursor:pointer;color:var(--muted)}
 .quote label.file input[type=file]::file-selector-button{font:600 14px/1 "IBM Plex Sans",sans-serif;margin-right:12px;padding:9px 14px;border:1.5px solid var(--line);border-radius:7px;background:#f4f6f9;color:var(--ink);cursor:pointer}
-.quote label.file .hint{font-weight:400;font-size:13px;color:var(--muted)}
+.quote label.file .hint,.quote label .hint{font-weight:400;font-size:13px;color:var(--muted)}
 .quote input[type=file].bad{border-color:#d92d20;box-shadow:0 0 0 3px rgba(217,45,32,.14)}
 .note{margin:0;font-size:13px;color:var(--muted);text-align:center}
 .faq details{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:10px}

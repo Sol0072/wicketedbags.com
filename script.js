@@ -40,7 +40,18 @@ document.addEventListener("DOMContentLoaded",function(){
     var v=(el.value||"").trim();
     if(!v){ markBad(el,"Required"); return false; }
     if(el.type==="email" && el.validity && el.validity.typeMismatch){ markBad(el,"Enter a valid email"); return false; }
+    if(el.name==="qty"){ var n=qtyNum(v), min=+el.getAttribute("data-moq")||10000; if(n>0 && n<min){ markBad(el,"Our minimum order quantity is "+min.toLocaleString("en-US")+"."); return false; } }
     clearBad(el); return true;
+  }
+  // Minimum order quantity (10,000). Reads "10,000", "10 000", "10.000", "10k", "1.5m", "12,000 bags",
+  // a range "5,000-10,000" (its top). Anything it can't read (NaN) is not blocked.
+  function qtyNum(v){
+    var s=String(v||"").trim().toLowerCase().replace(/[\s,'\u2019_+]/g,"").replace(/(bags?|pcs|pieces|units|ea)$/,""); if(!s) return NaN;
+    var parts=s.split(/-|\u2013|\u2014|to/).filter(Boolean), top=-1;
+    for(var i=0;i<parts.length;i++){ var t=parts[i], m=t.match(/^(\d+(?:\.\d+)?)([km])$/), x;
+      if(m) x=Math.round(Number(m[1])*(m[2]==="k"?1e3:1e6)); else if(/^\d+$/.test(t)) x=Number(t); else if(/^\d{1,3}(\.\d{3})+$/.test(t)) x=Number(t.replace(/\./g,"")); else return NaN;
+      if(x>top) top=x; }
+    return parts.length?top:NaN;
   }
   // Optional artwork file: PDF (or AI/EPS/PNG/JPG), up to 20 MB, checked as soon as it is chosen.
   var art=f.querySelector('input[name="artwork"]'), MAXB=20*1024*1024, OKX=/\.(pdf|ai|eps|png|jpe?g)$/i;
@@ -56,7 +67,7 @@ document.addEventListener("DOMContentLoaded",function(){
   f.querySelectorAll("select").forEach(function(s){ syncOther(s); s.addEventListener("change",function(){ syncOther(s); check(s); }); });
   f.querySelectorAll("input,select,textarea").forEach(function(el){
     el.addEventListener("input",function(){ if(el.classList.contains("bad")) check(el); });
-    el.addEventListener("blur",function(){ if(el.classList.contains("bad")) check(el); });
+    el.addEventListener("blur",function(){ if(el.classList.contains("bad") || (el.name==="qty" && el.value.trim())) check(el); });
   });
   f.addEventListener("submit",function(e){
     e.preventDefault();
