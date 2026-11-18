@@ -1,0 +1,15 @@
+/* Scoped clear-film mockup figures. */
+.wb-mockups{display:grid;gap:18px;margin:30px 0 34px;align-items:stretch}
+.wb-mockup{min-width:0;margin:0;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:var(--r)}
+.wb-mockup img{width:100%;height:auto;display:block}
+.wb-mockup figcaption{padding:12px 15px 14px;color:var(--muted);font-size:.875rem;line-height:1.45}
+.wb-mockup figcaption strong{display:block;margin-bottom:3px;color:var(--ink);font-size:1rem;font-weight:600}
+.wb-product-mockup{max-width:36rem;margin:24px 0 0}
+@media (max-width:579px){
+ .wb-mockups>figure,.wb-product-mockup>figure{width:min(100%,17rem);margin-inline:auto}
+}
+@media (min-width:580px){
+ .wb-mockups{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .wb-product-mockup .wb-mockup{display:grid;grid-template-columns:minmax(0,15rem) minmax(0,1fr);align-items:center}
+ .wb-product-mockup figcaption{padding:20px 24px}
+}
